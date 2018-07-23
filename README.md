@@ -41,3 +41,8 @@ If you have the
 [Redux DevTools chrome extension](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd) installed it will automatically be used on the client-side instead.
 
 DevTools are not enabled during production.
+
+#### Fetch
+I have used new [Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) API for network calls in this project instead of AJAX. Since Fetch is relatively newer API, it is not supported on older browsers.
+To overcome this limitation I have used a [polyfill](https://github.com/developit/unfetch) for Fetch. This just wraps older XMLHttp method in Promise and exposes interface similar to native Fetch.
+Please note that this does not simplify or modify the interface that of native Fetch. It just adds support for older browsers.
