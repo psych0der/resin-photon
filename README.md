@@ -51,4 +51,5 @@ Please note that this does not simplify or modify the interface that of native F
 [Storybook](https://github.com/storybooks/storybook) is a UI development and testing library. I have integrated storybook as this will provide required support
 for developing new UI components. To run storybook, type this command  -> `yarn run storybook`, and it will run a development server
 for storybook. For more options visit the link mentioned above.
-This development server will load files with extension `.stories.js` inside src directory
+
+The storybook configuration will load files with extension `.stories.js` inside src directory.
