@@ -46,3 +46,9 @@ DevTools are not enabled during production.
 I have used new [Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) API for network calls in this project instead of AJAX. Since Fetch is relatively newer API, it is not supported on older browsers.
 To overcome this limitation I have used a [polyfill](https://github.com/developit/unfetch) for Fetch. This just wraps older XMLHttp method in Promise and exposes interface similar to native Fetch.
 Please note that this does not simplify or modify the interface that of native Fetch. It just adds support for older browsers.
+
+#### Storybook
+[Storybook](https://github.com/storybooks/storybook) is a UI development and testing library. I have integrated storybook as this will provide required support
+for developing new UI components. To run storybook, type this command  -> `yarn run storybook`, and it will run a development server
+for storybook. For more options visit the link mentioned above.
+This development server will load files with extension `.stories.js` inside src directory
