@@ -22,3 +22,6 @@ yarn-error.log*
 
 # ignore css files
 *.css
+
+# ignore .env file
+.env
