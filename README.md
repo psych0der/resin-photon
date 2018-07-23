@@ -17,12 +17,15 @@ Sample home automation light controlling system using Resin mock API
 * I have added [Redux](https://redux.js.org/) for simple state management. This will also help in standardizing error handling for remote calls. I'll explain this another section.
 * Use [React router](https://github.com/ReactTraining/react-router) for declarative routing. Although, we have a single page right now. But why not use a standardized way of creating route paths?
 
+---
 
 #### Environment variables
 This project uses environment variables for configurations like HTTP endpoint of the light bulb API. This allows the code to be decoupled from the configuration and configurables to be frozen at build time.
 At the build time, this project looks for .env file in the project root directory. This setup was done by create-react-app automatically while setting up this project. [Look here](https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/template/README.md#adding-custom-environment-variables) for more info.
 This project contains *.env.sample* file to describe environment variables required by project. **Don't add any confidential values in this sample file. Original .env file is not checked in git for security reasons.**
 > Create a .env file by copying it from .env.sample before running this project  [`cp .env.sample .env`]
+
+---
 
 #### Redux
 I have used REDUX for state management. This allows for a single source of truth about application state. As there is scope for functionality addition which will require state to be maintained at application level, this is good to have addition in this project.
@@ -44,8 +47,10 @@ DevTools are not enabled during production.
 
 #### Fetch
 I have used new [Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) API for network calls in this project instead of AJAX. Since Fetch is relatively newer API, it is not supported on older browsers.
-To overcome this limitation I have used a [polyfill](https://github.com/developit/unfetch) for Fetch. This just wraps older XMLHttp method in Promise and exposes interface similar to native Fetch.
+To overcome this limitation a [polyfill](https://www.npmjs.com/package/whatwg-fetch) for Fetch has been used. This just wraps older XMLHttp method in Promise and exposes interface similar to native Fetch.
 Please note that this does not simplify or modify the interface that of native Fetch. It just adds support for older browsers.
+
+---
 
 #### Storybook
 [Storybook](https://github.com/storybooks/storybook) is a UI development and testing library. I have integrated storybook as this will provide required support
@@ -53,3 +58,71 @@ for developing new UI components. To run storybook, type this command  -> `yarn 
 for storybook. For more options visit the link mentioned above.
 
 The storybook configuration will load files with extension `.stories.js` inside src directory.
+
+---
+
+#### Project structure
+```
+resin-photon
+├── .storybook
+│   ├── config.js
+│   └── webpack.config.js
+├── config
+│   ├── env.js
+│   ├── paths.js
+│   ├── polyfills.js
+│   ├── webpack.config.dev.js
+│   ├── webpack.config.prod.js
+│   └── webpackDevServer.config.js
+├── public
+│   ├── favicon.ico
+│   ├── index.html
+│   └── manifest.json
+├── scripts
+│   ├── build.js
+│   ├── start.js
+│   └── test.js
+├── src
+│   ├── components
+│   ├── containers
+│   │   ├── App
+│   │   │   ├── App.test.js
+│   │   │   └── index.js
+│   │   ├── Home
+│   │   │   ├── index.css
+│   │   │   ├── index.js
+│   │   │   └── index.scss
+│   │   └── index.js
+│   ├── redux
+│   │   ├── middlewares
+│   │   │   └── augmentorMiddleware.js
+│   │   ├── reducers
+│   │   │   ├── index.js
+│   │   │   └── sample.js
+│   │   └── store.js
+│   ├── index.css
+│   ├── index.js
+│   ├── index.scss
+│   └── registerServiceWorker.js
+├── .eslintrc
+├── .flowconfig
+├── .gitignore
+├── .nvmrc
+├── .prettierrc
+├── README.md
+├── package.json
+└── yarn.lock
+```
+##### Application source code
+- All of the application source resides inside `src` directory.
+- All Redux related code is inside `src/redux`
+  - Reducers should reside in `src/redux/reducers`
+- Containers/Statefull components should have a directory inside `src/containers`. Expose the default container using index.js file inside folder
+- Dumb/fully controlled components should have a directory inside `src/components/`
+- All the static assets used by components/containers should be contained inside their respective directories. This is done to isolate their assets and dependencies
+- Each component/container should contain their .story.js and .test.js files inside their directories
+
+##### Configs
+ALl webpack related configs, and polyfills reside inside `config` directory
+
+---
