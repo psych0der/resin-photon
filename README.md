@@ -126,3 +126,18 @@ resin-photon
 ALl webpack related configs, and polyfills reside inside `config` directory
 
 ---
+
+#### Assumptions
+- I have assumed
+
+
+#### Approach
+I have started building this project by setting a sane development environment that will allow faster iterations, easy updates and better maintainability.
+- Eslint is configured to inherit default practices from react-app
+- Flow is configured to allow for type checking inside JS code
+- Storybook is configured to allow UI level testing
+- Jest is integrated to provide integrated testing environment with lots of goodies out of the box
+
+I have followed **bottom-up** approach while developing the application code. This allows developing basic components in isolation
+and then composing smaller, well tested components to form larger components and containers. This approach also encourages better composition and maintainability as it
+is easier to focus on smaller components individually instead of larger and monolith components
