@@ -23,3 +23,21 @@ This project uses environment variables for configurations like HTTP endpoint of
 At the build time, this project looks for .env file in the project root directory. This setup was done by create-react-app automatically while setting up this project. [Look here](https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/template/README.md#adding-custom-environment-variables) for more info.
 This project contains *.env.sample* file to describe environment variables required by project. **Don't add any confidential values in this sample file. Original .env file is not checked in git for security reasons.**
 > Create a .env file by copying it from .env.sample before running this project  [`cp .env.sample .env`]
+
+#### Redux
+I have used REDUX for state management. This allows for a single source of truth about application state. As there is scope for functionality addition which will require state to be maintained at application level, this is good to have addition in this project.
+Specifically, I have added REDUX for having a central and out of the box support for error handling of network requests. As all network requests have 3 states, namely in-progress, success, and failed, having a REDUX middleware at the application level that will handle all network calls allows to write error handling logic only once and the listen for different states to update UI.
+Whenever a remote call is made, it has to be done through REDUX action creators, which will dispatch the relevant actions on state change of network call.
+
+#### Using Redux DevTools
+
+[Redux Devtools](https://github.com/gaearon/redux-devtools) are enabled by default in development.
+
+- <kbd>CTRL</kbd>+<kbd>H</kbd> Toggle DevTools Dock
+- <kbd>CTRL</kbd>+<kbd>Q</kbd> Move DevTools Dock Position
+- see [redux-devtools-dock-monitor](https://github.com/gaearon/redux-devtools-dock-monitor) for more detailed information.
+
+If you have the
+[Redux DevTools chrome extension](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd) installed it will automatically be used on the client-side instead.
+
+DevTools are not enabled during production.
