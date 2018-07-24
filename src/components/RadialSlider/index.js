@@ -200,6 +200,7 @@ export class RadialSlider extends React.Component<Props, State> {
             </linearGradient>
           </defs>
           <path
+            id="baseRadial"
             d={baseRadialSlider}
             fill="transparent"
             stroke={baseStrokeColor}
@@ -207,6 +208,7 @@ export class RadialSlider extends React.Component<Props, State> {
             strokeWidth={`${strokeWidth}`}
           />
           <path
+            id="valueRadial"
             d={filledRadialSlider}
             fill="transparent"
             stroke="url(#exampleGradient)"

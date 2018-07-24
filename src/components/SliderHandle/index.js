@@ -143,6 +143,7 @@ export class SliderHandle extends React.Component<Props, State> {
         onTouchEnd={this.handleTouchEnd}
         onMouseDown={this.handleMouseDown}
         onMouseUp={this.handleMouseUp}
+        id="sliderKnob"
       >
         <filter
           id="dropshadow"
