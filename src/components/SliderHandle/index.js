@@ -51,6 +51,12 @@ export class SliderHandle extends React.Component<Props, State> {
     pressed: false,
   };
 
+  componentDidMount() {
+    /* Trigger this function to get initial value */
+    this.props.getAbsoluteContainerPosition();
+    this.props.onMove({ x: null, y: null });
+  }
+
   /**
    * Returns eventListener arguments for both mouse and touch move events
    */

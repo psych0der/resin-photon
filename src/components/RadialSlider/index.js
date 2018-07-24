@@ -20,6 +20,7 @@ type Props = {
   dimmestColor?: string,
   strokeWidth?: number,
   handleChange?: () => *,
+  children?: React.ChildrenArray<React.node>,
 };
 
 type State = {
@@ -59,7 +60,7 @@ export class RadialSlider extends React.Component<Props, State> {
    * touch/mouse move coordinates for user initiated event
    */
   absoluteContainerPosition = (): { x: number, y: number } | null => {
-    if (!this.containerNode) {
+    if (!this.containerNode.current) {
       return null;
     }
     const {
@@ -74,6 +75,11 @@ export class RadialSlider extends React.Component<Props, State> {
    * This function calculates position on radial path
    */
   handleDrag = ({ x, y }: { x: number, y: number }) => {
+    if (x === null) {
+      /* trigger change */
+      this.setState({});
+      return;
+    }
     const { x: initialX, y: initialY } = polarToCartesian(
       0,
       0,
@@ -138,6 +144,20 @@ export class RadialSlider extends React.Component<Props, State> {
       radius,
       this.state.handleAngle
     );
+    let containerPosition = this.absoluteContainerPosition();
+    let childContainerStyle = {};
+    if (containerPosition == null) {
+      childContainerStyle = {
+        display: 'none',
+      };
+    } else {
+      childContainerStyle = {
+        position: 'absolute',
+        left: containerPosition.x + this.Geometry.sliderCenterX,
+        top: containerPosition.y + this.Geometry.sliderCenterY,
+        transform: 'translate(-50%, -50%)',
+      };
+    }
 
     return (
       <div>
@@ -181,6 +201,7 @@ export class RadialSlider extends React.Component<Props, State> {
             }}
           />
         </svg>
+        <div style={childContainerStyle}>{this.props.children}</div>
       </div>
     );
   }
