@@ -20,6 +20,7 @@ type Props = {
   dimmestColor?: string,
   strokeWidth?: number,
   handleChange?: () => *,
+  value: number,
   children?: React.ChildrenArray<React.node>,
 };
 
@@ -40,6 +41,7 @@ export class RadialSlider extends React.Component<Props, State> {
     brightestColor: '#F7C544',
     strokeWidth: 20.4,
     handleChange: () => {},
+    value: 0,
   };
   Geometry = {
     svgWidth: 2 * (this.props.radius + 20),
@@ -48,8 +50,25 @@ export class RadialSlider extends React.Component<Props, State> {
     sliderCenterY: this.props.radius + 20,
   };
 
+  /**
+   * Converts initial value to angle.
+   * This is used to set initial position of the handle
+   */
+  convertValueToAngle = (value: number) => {
+    // clip percentage
+    if (value > 100) {
+      value = 100;
+    } else if (value < 0) {
+      value = 0;
+    }
+
+    let total = 360 - this.props.arcEndAngle + this.props.arcStartAngle;
+    let angle = normalizeAngle(this.props.arcEndAngle + total * value * 0.01);
+    this.props.handleChange(value);
+    return angle;
+  };
   state = {
-    handleAngle: this.props.arcEndAngle,
+    handleAngle: this.convertValueToAngle(this.props.value),
   };
 
   containerNode = React.createRef();
@@ -86,8 +105,11 @@ export class RadialSlider extends React.Component<Props, State> {
       this.props.radius,
       this.state.handleAngle
     );
+    // get new angle by adding delta
     const deltaTheta = calcAngleDiff(x, y, initialX, -initialY);
     let newAngle = normalizeAngle(this.state.handleAngle + deltaTheta);
+
+    // clip off new angle within the bounds of start and end angle
     if (
       newAngle > this.props.arcStartAngle &&
       newAngle < this.props.arcEndAngle
@@ -98,6 +120,7 @@ export class RadialSlider extends React.Component<Props, State> {
         newAngle = this.props.arcEndAngle;
       }
     }
+    // calculate percentage value
     const total = 360 - this.props.arcEndAngle + this.props.arcStartAngle;
     let value = null;
     if (newAngle > 0 && newAngle <= this.props.arcStartAngle) {
