@@ -6,6 +6,7 @@ import {
   polarToCartesian,
   calcAngleDiff,
   createCircularArc,
+  normalizeAngle,
 } from '../../commons/helpers';
 
 type Props = {
@@ -71,15 +72,24 @@ export class RadialSlider extends React.Component<Props, State> {
    * This function calculates position on radial path
    */
   handleDrag = ({ x, y }: { x: number, y: number }) => {
-    const { x: fiducialX, y: fiducialY } = polarToCartesian(
+    const { x: initialX, y: initialY } = polarToCartesian(
       0,
       0,
       this.props.radius,
       this.state.handleAngle
     );
-    const deltaTheta = calcAngleDiff(x, y, fiducialX, -fiducialY);
-    const newAngle = this.state.handleAngle + deltaTheta;
-    // this.props.onMove(newAngle);
+    const deltaTheta = calcAngleDiff(x, y, initialX, -initialY);
+    let newAngle = normalizeAngle(this.state.handleAngle + deltaTheta);
+    if (
+      newAngle > this.props.arcStartAngle &&
+      newAngle < this.props.arcEndAngle
+    ) {
+      if (deltaTheta >= 0) {
+        newAngle = this.props.arcStartAngle;
+      } else {
+        newAngle = this.props.arcEndAngle;
+      }
+    }
     this.setState({ handleAngle: newAngle });
   };
 
@@ -88,8 +98,6 @@ export class RadialSlider extends React.Component<Props, State> {
       radius,
       arcStartAngle,
       arcEndAngle,
-      useLargerArc,
-      arcSweep,
       baseStrokeColor,
       brightestColor,
       dimmestColor,
@@ -102,19 +110,15 @@ export class RadialSlider extends React.Component<Props, State> {
       this.Geometry.sliderCenterY,
       radius,
       arcStartAngle,
-      arcEndAngle,
-      useLargerArc,
-      arcSweep
+      arcEndAngle
     );
     // create values radial for overlay
     const filledRadialSlider = createCircularArc(
       this.Geometry.sliderCenterX,
       this.Geometry.sliderCenterY,
       radius,
-      -20,
-      arcEndAngle,
-      useLargerArc,
-      arcSweep
+      this.state.handleAngle,
+      arcEndAngle
     );
 
     const handlerStartPosition = polarToCartesian(
