@@ -22,6 +22,7 @@ export class Popover extends React.Component<Props> {
     triggerWidth: 400,
     triggerHeight: 60,
     isMobile: false,
+    closePopOver: () => {},
   };
 
   /**
@@ -86,7 +87,7 @@ export class Popover extends React.Component<Props> {
   };
 
   render() {
-    const isMobile = window.innerWidth <= 760 ? true : false;
+    const { isMobile } = this.props;
     const arrowClass = isMobile ? style.upArrow : style.leftArrow;
     const {
       popOverTop,
