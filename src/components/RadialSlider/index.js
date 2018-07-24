@@ -1,6 +1,11 @@
 import React from 'react';
 import style from './index.css';
-import { polarToCartesian, calcAngleDiff, createCircularArc } from './helpers';
+import { SliderHandle } from '../index';
+import {
+  polarToCartesian,
+  calcAngleDiff,
+  createCircularArc,
+} from '../../commons/helpers';
 
 type Props = {
   radius: number, // in degrees
@@ -16,12 +21,6 @@ type Props = {
 
 export class RadialSlider extends React.Component<Props> {
   //   basic dimensions of svg container and radial slider
-  Geometry = {
-    svgWidth: 300,
-    svgHeight: 300,
-    sliderCenterX: 150,
-    sliderCenterY: 150,
-  };
   static defaultProps = {
     radius: 100,
     arcStartAngle: 40,
@@ -32,6 +31,12 @@ export class RadialSlider extends React.Component<Props> {
     dimmestColor: '#82671F',
     brightestColor: '#F7C544',
     strokeWidth: 20.4,
+  };
+  Geometry = {
+    svgWidth: 2 * (this.props.radius + 20),
+    svgHeight: 2 * (this.props.radius + 20),
+    sliderCenterX: this.props.radius + 20,
+    sliderCenterY: this.props.radius + 20,
   };
 
   render() {
@@ -67,6 +72,13 @@ export class RadialSlider extends React.Component<Props> {
       useLargerArc,
       arcSweep
     );
+
+    const handlerPosition = polarToCartesian(
+      this.Geometry.sliderCenterX,
+      this.Geometry.sliderCenterY,
+      radius,
+      arcEndAngle
+    );
     return (
       <div>
         <div>radial slider</div>
@@ -74,6 +86,9 @@ export class RadialSlider extends React.Component<Props> {
           style={{
             width: this.Geometry.svgWidth + 'px',
             height: this.Geometry.svgHeight + 'px',
+          }}
+          innerRef={x => {
+            this.containerNode = x;
           }}
           viewBox={`0 0 ${this.Geometry.svgWidth} ${this.Geometry.svgHeight}`}
         >
@@ -96,6 +111,10 @@ export class RadialSlider extends React.Component<Props> {
             stroke="url(#exampleGradient)"
             strokeLinecap="round"
             strokeWidth={`${strokeWidth}`}
+          />
+          <SliderHandle
+            centerX={handlerPosition.x}
+            centerY={handlerPosition.y}
           />
         </svg>
       </div>
