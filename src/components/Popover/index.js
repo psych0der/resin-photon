@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import style from './index.css';
+import memoize from 'memoize-one';
 
 type Props = {
   triggerTop?: number,
@@ -8,6 +9,7 @@ type Props = {
   triggerHeight?: number,
   triggerWidth?: number,
   show?: boolean,
+  isMobile?: boolean,
   closePopOver?: () => *,
   children?: React.ChildrenArray<React.node>,
 };
@@ -17,6 +19,9 @@ export class Popover extends React.Component<Props> {
     show: true,
     triggerTop: 40,
     triggerLeft: 150,
+    triggerWidth: 400,
+    triggerHeight: 60,
+    isMobile: false,
   };
 
   /**
@@ -28,47 +33,51 @@ export class Popover extends React.Component<Props> {
    * the exact position of the Popover and it's indicator triangle
    *
    * `~~` This operator converts data to nearest integer by dropping the decimal fields
+   *
+   * This function is memoized for performance reasons
    */
-  calculatePopOverPosition = (
-    triggerTop: number,
-    triggerLeft: number,
-    triggerWidth: number,
-    triggerHeight: number,
-    isMobile: boolean
-  ) => {
-    let popOverTop,
-      popOverLeft,
-      popOverHeight,
-      popOverWidth,
-      arrowLeft,
-      arrowTop = null;
+  calculatePopOverPosition = memoize(
+    (
+      triggerTop: number,
+      triggerLeft: number,
+      triggerWidth: number,
+      triggerHeight: number,
+      isMobile: boolean
+    ) => {
+      let popOverTop,
+        popOverLeft,
+        popOverHeight,
+        popOverWidth,
+        arrowLeft,
+        arrowTop = null;
 
-    if (isMobile) {
-      // Popover will appear on the bottom of the element
-      popOverWidth = ~~(window.innerWidth * 0.8);
-      popOverHeight = ~~(window.innerHeight * 0.6);
-      popOverLeft = ~~window.innerWidth * 0.1;
-      popOverTop = ~~(triggerTop + triggerHeight) + 20;
-      arrowTop = -10;
-      arrowLeft = ~~(popOverWidth / 2) - 10;
-    } else {
-      popOverWidth = ~~(window.innerWidth * 0.4);
-      popOverHeight = ~~(window.innerHeight - 60);
-      popOverLeft = triggerLeft + triggerWidth + 20;
-      popOverTop = 60;
-      arrowLeft = -10;
-      arrowTop = ~~(popOverHeight / 2) - 10;
+      if (isMobile) {
+        // Popover will appear on the bottom of the element
+        popOverWidth = ~~(window.innerWidth * 0.8);
+        popOverHeight = ~~(window.innerHeight * 0.6);
+        popOverLeft = ~~window.innerWidth * 0.1;
+        popOverTop = ~~(triggerTop + triggerHeight) + 20;
+        arrowTop = -10;
+        arrowLeft = ~~(popOverWidth / 2) - 10;
+      } else {
+        popOverWidth = ~~(window.innerWidth * 0.4);
+        popOverHeight = ~~(window.innerHeight - 60);
+        popOverLeft = triggerLeft + triggerWidth + 20;
+        popOverTop = 60;
+        arrowLeft = -10;
+        arrowTop = ~~(triggerTop + triggerHeight / 2) - 5;
+      }
+
+      return {
+        popOverTop,
+        popOverLeft,
+        popOverHeight,
+        popOverWidth,
+        arrowTop,
+        arrowLeft,
+      };
     }
-
-    return {
-      popOverTop,
-      popOverLeft,
-      popOverHeight,
-      popOverWidth,
-      arrowTop,
-      arrowLeft,
-    };
-  };
+  );
 
   //   This closes the popover
   closePopover = () => {
@@ -86,7 +95,13 @@ export class Popover extends React.Component<Props> {
       popOverWidth,
       arrowTop,
       arrowLeft,
-    } = this.calculatePopOverPosition(10, 20, 300, 60, isMobile);
+    } = this.calculatePopOverPosition(
+      this.props.triggerLeft,
+      this.props.triggerTop,
+      this.props.triggerWidth,
+      this.props.triggerHeight,
+      this.props.isMobile
+    );
 
     // create style objects for popover and arrow
     const popOverStyle = {
@@ -105,7 +120,11 @@ export class Popover extends React.Component<Props> {
       return (
         <div className={style.popOver} style={popOverStyle}>
           <div className={arrowClass} style={arrowStyles} />
-          <div className={style.closeButton} onClick={this.closePopover} />
+          <div
+            className={style.closeButton}
+            onClick={this.closePopover}
+            id="popoverCloseButton"
+          />
           {this.props.children}
         </div>
       );
