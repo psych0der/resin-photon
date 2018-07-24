@@ -1,0 +1,51 @@
+$popover-color: #3B3C41;
+
+.popOver {
+    position: absolute;
+    background-color: $popover-color;
+    border-radius: 7px;
+    padding: 10px;
+}
+
+.popOverArrow {
+    position: absolute;
+}
+
+.leftArrow {
+    @extend .popOverArrow;
+	width: 0;
+	height: 0;
+	border-bottom: 10px solid transparent;  /* left arrow slant */
+	border-top: 10px solid transparent; /* right arrow slant */
+	border-right: 10px solid $popover-color; /* bottom, add background color here */
+	font-size: 0;
+	line-height: 0;
+}
+
+.upArrow {
+    @extend .popOverArrow;
+	width: 0;
+	height: 0;
+	border-left: 10px solid transparent;  /* left arrow slant */
+	border-right: 10px solid transparent; /* right arrow slant */
+	border-bottom: 10px solid $popover-color; /* bottom, add background color here */
+	font-size: 0;
+	line-height: 0;
+}
+
+
+.closeButton {
+  cursor: pointer;
+  color: #aaa;
+  font: 14px/100% arial, sans-serif;
+  position: absolute;
+  right: 5px;
+  text-decoration: none;
+
+  top: 5px;
+  font-size: 20px;
+}
+
+.closeButton:after {
+    content: '×'; /* UTF-8 symbol */
+  }
