@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import style from './index.css';
 import { SliderHandle } from '../index';
@@ -12,14 +13,18 @@ type Props = {
   arcStartAngle: number, // in degrees
   arcEndAngle: number, // in degrees
   useLargerArc?: number | null,
-  sweep?: number,
+  arcSweep?: number,
   baseStrokeColor?: string,
   brightestColor?: string,
   dimmestColor?: string,
   strokeWidth?: number,
 };
 
-export class RadialSlider extends React.Component<Props> {
+type State = {
+  handleAngle: number,
+};
+
+export class RadialSlider extends React.Component<Props, State> {
   //   basic dimensions of svg container and radial slider
   static defaultProps = {
     radius: 100,
@@ -37,6 +42,45 @@ export class RadialSlider extends React.Component<Props> {
     svgHeight: 2 * (this.props.radius + 20),
     sliderCenterX: this.props.radius + 20,
     sliderCenterY: this.props.radius + 20,
+  };
+
+  state = {
+    handleAngle: this.props.arcEndAngle,
+  };
+
+  containerNode = React.createRef();
+
+  /**
+   * Returns coordinates for container svg element
+   * These coordinates will be used to calculate
+   * touch/mouse move coordinates for user initiated event
+   */
+  absoluteContainerPosition = (): { x: number, y: number } | null => {
+    if (!this.containerNode) {
+      return null;
+    }
+    const {
+      left: x,
+      top: y,
+    } = this.containerNode.current.getBoundingClientRect();
+    return { x, y };
+  };
+
+  /**
+   * Drag(mouse/touch event ) postprocessing handler
+   * This function calculates position on radial path
+   */
+  handleDrag = ({ x, y }: { x: number, y: number }) => {
+    const { x: fiducialX, y: fiducialY } = polarToCartesian(
+      0,
+      0,
+      this.props.radius,
+      this.state.handleAngle
+    );
+    const deltaTheta = calcAngleDiff(x, y, fiducialX, -fiducialY);
+    const newAngle = this.state.handleAngle + deltaTheta;
+    // this.props.onMove(newAngle);
+    this.setState({ handleAngle: newAngle });
   };
 
   render() {
@@ -73,12 +117,13 @@ export class RadialSlider extends React.Component<Props> {
       arcSweep
     );
 
-    const handlerPosition = polarToCartesian(
-      this.Geometry.sliderCenterX,
-      this.Geometry.sliderCenterY,
+    const handlerStartPosition = polarToCartesian(
+      0,
+      0,
       radius,
-      arcEndAngle
+      this.state.handleAngle
     );
+
     return (
       <div>
         <div>radial slider</div>
@@ -87,9 +132,7 @@ export class RadialSlider extends React.Component<Props> {
             width: this.Geometry.svgWidth + 'px',
             height: this.Geometry.svgHeight + 'px',
           }}
-          innerRef={x => {
-            this.containerNode = x;
-          }}
+          ref={this.containerNode}
           viewBox={`0 0 ${this.Geometry.svgWidth} ${this.Geometry.svgHeight}`}
         >
           <defs>
@@ -113,8 +156,14 @@ export class RadialSlider extends React.Component<Props> {
             strokeWidth={`${strokeWidth}`}
           />
           <SliderHandle
-            centerX={handlerPosition.x}
-            centerY={handlerPosition.y}
+            handlerX={handlerStartPosition.x}
+            handlerY={handlerStartPosition.y}
+            getAbsoluteContainerPosition={this.absoluteContainerPosition}
+            onMove={this.handleDrag}
+            sliderCenterPosition={{
+              x: this.Geometry.sliderCenterX,
+              y: this.Geometry.sliderCenterY,
+            }}
           />
         </svg>
       </div>
