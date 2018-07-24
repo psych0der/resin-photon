@@ -46,6 +46,18 @@ export const calcAngleDiff = (
  * @param {Number} startAngle angle from the center of the circle  of starting point of the arc
  * @param {Number} endAngle angle from the center of the circle  of ending point of the arc
  */
+
+/**
+ * Make angles sane again
+ */
+export const normalizeAngle = (angle: number) => {
+  if (angle > 360) {
+    return angle - 360;
+  } else if (angle < 0) {
+    return 360 + angle;
+  }
+  return angle;
+};
 export const createCircularArc = (
   centerX: number,
   centerY: number,
@@ -53,15 +65,21 @@ export const createCircularArc = (
   startAngle: number,
   endAngle: number,
   useLargerArc: number | null = null,
-  arcSweep: number = 0
+  arcSweep: number = 1
 ) => {
   // this is because we want to draw from endpoint to counter clockwise
   let start = polarToCartesian(centerX, centerY, radius, endAngle);
   let end = polarToCartesian(centerX, centerY, radius, startAngle);
 
   // we want to use larger arc if the difference between the starting and ending point is > 180
+  const angleDiff = normalizeAngle(endAngle - startAngle);
   useLargerArc =
-    useLargerArc != null ? useLargerArc : endAngle - startAngle <= 180 ? 0 : 1;
+    useLargerArc != null
+      ? useLargerArc
+      : (angleDiff > -180 && angleDiff) < 0 ||
+        (angleDiff >= 180 && angleDiff < 360)
+        ? 0
+        : 1;
 
   return `M ${start.x} ${
     start.y
