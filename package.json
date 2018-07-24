@@ -65,6 +65,7 @@
     "build": "npm-run-all build-css build-js",
     "test": "node scripts/test.js --env=jsdom",
     "precommit": "pretty-quick --staged",
+    "start-storybook": "npm-run-all -p watch-css storybook",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
