@@ -19,6 +19,7 @@ type Props = {
   brightestColor?: string,
   dimmestColor?: string,
   strokeWidth?: number,
+  handleChange?: () => *,
 };
 
 type State = {
@@ -37,6 +38,7 @@ export class RadialSlider extends React.Component<Props, State> {
     dimmestColor: '#82671F',
     brightestColor: '#F7C544',
     strokeWidth: 20.4,
+    handleChange: () => {},
   };
   Geometry = {
     svgWidth: 2 * (this.props.radius + 20),
@@ -90,6 +92,15 @@ export class RadialSlider extends React.Component<Props, State> {
         newAngle = this.props.arcEndAngle;
       }
     }
+    const total = 360 - this.props.arcEndAngle + this.props.arcStartAngle;
+    let value = null;
+    if (newAngle > 0 && newAngle <= this.props.arcStartAngle) {
+      value = 360 - this.props.arcEndAngle + newAngle;
+    } else {
+      value = newAngle - this.props.arcEndAngle;
+    }
+    /* pass % change in change function */
+    this.props.handleChange(Math.round((value / total) * 100));
     this.setState({ handleAngle: newAngle });
   };
 
