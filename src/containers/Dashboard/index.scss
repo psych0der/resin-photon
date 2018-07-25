@@ -1,0 +1,21 @@
+.dashboardContainer{
+    padding: 5px;
+    margin-top: 10px;
+}
+.loadingContainer{
+    text-align: center;
+}
+.loadingContainer div:first-child{
+    margin: 0 auto;
+}
+
+.loadingText{
+    font-size: 20px;
+    color: #444;
+    margin-top: 20px;
+}
+
+.failedText{
+    @extend .loadingText;
+    color: #E2502E;
+}
