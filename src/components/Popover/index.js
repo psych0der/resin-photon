@@ -55,7 +55,6 @@ export class Popover extends React.Component<Props> {
       // add page scroll amount to popover top position
       // this is required to mobile devices
       let doc = document.documentElement;
-      let top = (window.pageYOffset || doc.scrollTop) - (doc.clientTop || 0);
       popOverWidth = ~~(window.innerWidth * 0.8);
       popOverHeight = 400; //Make it constant. ~~(window.innerHeight - triggerTop);
       popOverLeft = ~~window.innerWidth * 0.1;
