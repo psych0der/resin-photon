@@ -7,7 +7,8 @@ export const FETCH_COMPLETE_DATA_SUCCESS =
   'BULBDATA/FETCH_COMPLETE_DATA_SUCCESS';
 export const FETCH_COMPLETE_DATA_FAILED = 'BULBDATA/FETCH_COMPLETE_DATA_FAILED';
 
-export const MODIFY_BULB_DATA = 'BULBDATA/MODIFY_BULB_DATA';
+export const MODIFY_BULB_BRIGHTNESS = 'BULBDATA/MODIFY_BULB_BRIGHTNESS';
+export const MODIFY_BULB_NAME = 'BULBDATA/MODIFY_BULB_NAME';
 /* Buld data is broken down into data hash and data order to speedup data edits.
   Radial slider invokes lot of changes, so edits needs to be performant
  */
@@ -52,7 +53,7 @@ export default (state: State = initialState, action: Action) => {
         fetchCompleteDataError: action.error.toString(),
       };
 
-    case MODIFY_BULB_DATA:
+    case MODIFY_BULB_BRIGHTNESS:
       // Modify bulb brightness
       // Turn off the bulb if brightness is 0
       let active = true;
@@ -66,6 +67,19 @@ export default (state: State = initialState, action: Action) => {
             ...state.dataHash[action.id],
             active,
             brightness: action.brightness,
+          },
+        },
+      });
+
+    case MODIFY_BULB_NAME:
+      // Modify bulb name
+
+      return Object.assign({}, state, {
+        dataHash: {
+          ...state.dataHash,
+          [action.id]: {
+            ...state.dataHash[action.id],
+            name: action.name,
           },
         },
       });
@@ -115,6 +129,29 @@ export const fetchCompleteData = () => (dispatch: Dispatch) => {
 };
 
 /**
+ * This method pushes the bulb data changes to server
+ * This method optimistically updates the data on server
+ * and doesn't track the result
+ * @param {number} bulbId
+ * @param {Object} data
+ */
+const pushBulbDataChange = (bulbId: number, data: Object) => {
+  console.log(data);
+  return fetch(
+    `http://${process.env.REACT_APP_API_HOST}:${
+      process.env.REACT_APP_API_PORT
+    }/api/v1/device/${bulbId}`,
+    {
+      method: 'PATCH',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ data }),
+    }
+  ).catch(e => console.error(e));
+};
+
+/**
  * Set bulb brightness value of particular bulb
  * @param {number} id
  * @param {number} brightness
@@ -122,9 +159,23 @@ export const fetchCompleteData = () => (dispatch: Dispatch) => {
 export const setBrightness = (id: number, brightness: number) => (
   dispatch: Dispatch
 ) => {
+  // update changes on server
+  pushBulbDataChange(id, { brightness, active: true ? brightness > 0 : false });
   dispatch({
-    type: MODIFY_BULB_DATA,
+    type: MODIFY_BULB_BRIGHTNESS,
     id,
     brightness,
+  });
+};
+
+export const setBulbName = (id: number, name: string) => (
+  dispatch: Dispatch
+) => {
+  // update changes on server
+  pushBulbDataChange(id, { name });
+  dispatch({
+    type: MODIFY_BULB_NAME,
+    id,
+    name,
   });
 };
