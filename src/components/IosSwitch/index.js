@@ -7,6 +7,7 @@ type Props = {
   handleChange?: () => *,
   defaultChecked?: boolean,
   handleChange?: () => *,
+  small?: boolean,
 };
 
 type State = {
@@ -18,6 +19,7 @@ class IosSwitch extends React.Component<Props, State> {
     sequence: 0,
     defaultChecked: false,
     handleChange: () => {},
+    small: false,
   };
 
   state = { checked: this.props.defaultChecked };
@@ -30,6 +32,15 @@ class IosSwitch extends React.Component<Props, State> {
   };
 
   render() {
+    const { small } = this.props;
+    let customStyle = {};
+    if (small) {
+      customStyle = {
+        height: '16px',
+        width: '32px',
+      };
+    }
+
     return (
       <div className="iosSwitch">
         <input
@@ -39,7 +50,10 @@ class IosSwitch extends React.Component<Props, State> {
           onChange={this.onChange}
           defaultChecked={this.props.defaultChecked}
         />
-        <label htmlFor={`iosSwitch-${this.props.sequence}`} />
+        <label
+          style={customStyle}
+          htmlFor={`iosSwitch-${this.props.sequence}`}
+        />
       </div>
     );
   }
