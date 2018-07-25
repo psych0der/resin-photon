@@ -10,11 +10,8 @@ it('renders without crashing', () => {
 });
 it('Calls handleChange function on dragging slider', () => {
   let onHandleChange = jest.fn();
-  const wrapper = mount(<RadialSlider handleChange={onHandleChange} />);
-  wrapper
-    .find('#sliderKnob')
-    .simulate('mousedown')
-    .simulate('mouseup');
+  const wrapper = shallow(<RadialSlider handleChange={onHandleChange} />);
+  wrapper.instance().handleDrag(20, 20);
   expect(onHandleChange).toHaveBeenCalled();
 });
 
