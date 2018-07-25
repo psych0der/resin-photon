@@ -147,7 +147,7 @@ export class Dashboard extends React.Component<Props, State> {
     }
 
     let dashboardContent = null;
-    if (fetchState == Constants.IN_PROGRESS) {
+    if (fetchState === Constants.IN_PROGRESS) {
       dashboardContent = (
         <div className={styles.loadingContainer}>
           <ClipLoader color={'#444'} className={styles.loadingSpinner} />
@@ -156,7 +156,7 @@ export class Dashboard extends React.Component<Props, State> {
       );
     } else if (fetchState === Constants.FAILED) {
       dashboardContent = <Retry handleRetry={this.requestBulbData} />;
-    } else if (fetchState == Constants.SUCCESS) {
+    } else if (fetchState === Constants.SUCCESS) {
       dashboardContent = (
         <div className={styles.dataContainer}>
           <TableWrapper
@@ -164,7 +164,6 @@ export class Dashboard extends React.Component<Props, State> {
             handleRowClick={this.handleRowClick}
             handleBulbNameChange={this.handleBulbNameChange}
             handleBulbSwitchToggle={this.handleBulbSwitchToggle}
-            handleRowClick={this.handleRowClick}
           />
         </div>
       );

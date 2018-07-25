@@ -1,9 +1,9 @@
 // @flow
 import React from 'react';
-import { RadialSlider, IosSwitch } from '../../components';
+
 import { Dashboard } from '../../containers';
 import { getFormatedDate, formatAMPM } from '../../commons/helpers';
-import { Navbar, DropDownButton, Img, Link } from 'rendition';
+import { Navbar, Link } from 'rendition';
 import styles from './index.css';
 type Props = {};
 type State = {
@@ -35,16 +35,14 @@ export class Home extends React.Component<Props, State> {
     return (
       <div className={styles.someClass}>
         <Navbar
-          color="white"
           brand={currentDate}
           bg={navBackgrounColor}
-          p="10px"
+          p="17px"
           style={{ height: '50px' }}
           fontSize="12px"
           color={navBarTextColor}
         >
           {currentTime}
-          <Link />
           <Link />
         </Navbar>
         <Dashboard />

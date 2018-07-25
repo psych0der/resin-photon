@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import style from './index.css';
-import memoize from 'memoize-one';
 
 type Props = {
   triggerTop?: number,

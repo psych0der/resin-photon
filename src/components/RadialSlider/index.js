@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import style from './index.css';
 import { SliderHandle } from '../index';
 import {
   polarToCartesian,
@@ -152,7 +151,7 @@ export class RadialSlider extends React.Component<Props, State> {
     }
     /* pass % change in change function */
     // only trigger changes when there is an actual change
-    if (newAngle != this.state.handleAngle) {
+    if (newAngle !== this.state.handleAngle) {
       this.props.handleChange(Math.round((value / total) * 100));
       this.setState({ handleAngle: newAngle });
     }
