@@ -5,7 +5,7 @@ import style from './index.css';
 type Props = {
   sequence?: string | number,
   handleChange?: () => *,
-  defaultChecked?: boolean,
+  checked?: boolean,
   handleChange?: () => *,
   small?: boolean,
 };
@@ -22,7 +22,15 @@ class IosSwitch extends React.Component<Props, State> {
     small: false,
   };
 
-  state = { checked: this.props.defaultChecked };
+  state = { checked: this.props.checked };
+
+  // This is to update defaultChecked value in case of prop changes
+  // static getDerivedStateFromProps(nextProps: Props, prevState: State) {
+  //   console.log(nextProps.defaultChecked);
+  //   return {
+  //     checked: nextProps.defaultChecked,
+  //   };
+  // }
 
   onChange = (e: Event) => {
     e.stopPropagation();
@@ -54,7 +62,7 @@ class IosSwitch extends React.Component<Props, State> {
           type="checkbox"
           id={`iosSwitch-${this.props.sequence}`}
           onChange={this.onChange}
-          defaultChecked={this.props.defaultChecked}
+          checked={this.props.checked}
         />
         <label
           style={customStyle}
