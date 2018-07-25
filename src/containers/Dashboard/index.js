@@ -182,7 +182,7 @@ export class Dashboard extends React.Component<Props, State> {
       <div className={styles.dashboardContainer}>
         <Container>
           <Row>
-            <Col sm={6}>
+            <Col lg={6} style={{ overflow: 'scroll' }}>
               <div>{dashboardContent}</div>
             </Col>
           </Row>
