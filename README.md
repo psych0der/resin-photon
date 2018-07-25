@@ -29,9 +29,10 @@ Table of contents
 
 #### [Usage](#usage)
 **This project uses node version 8. It is advisable to use [nvm](https://github.com/creationix/nvm). Project root contains `.nvmrc` file.**
-> This project consumes
+> This project requires a working mock API server which can be found [here](https://github.com/resin-io/light-api). Details of the API,
+  namely HOST and PORT should be set in `.env`. Default values are already provided in `.env.sample`
 
-
+- Copy requirement file from .env.sample `cp .env.sample .env`
 - Install dependencies: `yarn install`
 - Start development server: `yarn run start`
 - Create a production build: `yarn run build`
@@ -183,6 +184,7 @@ ALl webpack related configs, and polyfills reside inside `config` directory
 - I could not focus much on building a perfect navbar due to time shortage. This is partly because the implementation does not
   allow setting a value in the middle of the navbar.
 - I couldn't make pixel to pixel copy of the screenshot given in the assignment
+- Responsive table on mobile. This is because the Table element from Rendition is not responsive and fixing it was out of the scope of this assignment
 
 ---
 
