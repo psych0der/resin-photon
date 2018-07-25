@@ -37,56 +37,58 @@ export class Popover extends React.Component<Props> {
    *
    * This function is memoized for performance reasons
    */
-  calculatePopOverPosition = memoize(
-    (
-      triggerTop: number,
-      triggerLeft: number,
-      triggerWidth: number,
-      triggerHeight: number,
-      isMobile: boolean
-    ) => {
-      let popOverTop,
-        popOverLeft,
-        popOverHeight,
-        popOverWidth,
-        arrowLeft,
-        arrowTop = null;
+  calculatePopOverPosition = (
+    triggerTop: number,
+    triggerLeft: number,
+    triggerWidth: number,
+    triggerHeight: number,
+    isMobile: boolean
+  ) => {
+    let popOverTop,
+      popOverLeft,
+      popOverHeight,
+      popOverWidth,
+      arrowLeft,
+      arrowTop = null;
 
-      if (isMobile) {
-        // Popover will appear on the bottom of the element
-        popOverWidth = ~~(window.innerWidth * 0.8);
-        popOverHeight = ~~(window.innerHeight * 0.6);
-        popOverLeft = ~~window.innerWidth * 0.1;
-        popOverTop = ~~(triggerTop + triggerHeight) + 20;
-        arrowTop = -10;
-        arrowLeft = ~~(popOverWidth / 2) - 10;
-      } else {
-        popOverWidth = ~~(window.innerWidth * 0.4);
-        popOverHeight = ~~(window.innerHeight - 60);
-        popOverLeft = triggerLeft + triggerWidth + 20;
-        popOverTop = 60;
-        arrowLeft = -10;
-        arrowTop = ~~(triggerTop + triggerHeight / 2) - 5;
-      }
-
-      return {
-        popOverTop,
-        popOverLeft,
-        popOverHeight,
-        popOverWidth,
-        arrowTop,
-        arrowLeft,
-      };
+    if (isMobile) {
+      // Popover will appear on the bottom of the element
+      popOverWidth = ~~(window.innerWidth * 0.8);
+      popOverHeight = 400; //Make it constant. ~~(window.innerHeight - triggerTop);
+      popOverLeft = ~~window.innerWidth * 0.1;
+      popOverTop = ~~triggerTop + ~~triggerHeight + 10;
+      arrowTop = -10;
+      arrowLeft = ~~(popOverWidth / 2) - 10;
+    } else {
+      popOverWidth = window.innerWidth / 2 - 40; //make it constant ~~(window.innerWidth * 0.4);
+      popOverHeight = ~~(window.innerHeight - 60);
+      popOverLeft = triggerLeft + triggerWidth + 20;
+      popOverTop = 60;
+      arrowLeft = -10;
+      arrowTop = ~~triggerTop + triggerHeight / 2 - 70;
     }
-  );
+
+    return {
+      popOverTop,
+      popOverLeft,
+      popOverHeight,
+      popOverWidth,
+      arrowTop,
+      arrowLeft,
+    };
+  };
 
   //   This closes the popover
   closePopover = () => {
-    console.log('closing the popover');
     this.props.closePopOver();
   };
 
   render() {
+    const { show } = this.props;
+    // return early on no show
+    if (!show) {
+      return null;
+    }
     const { isMobile } = this.props;
     const arrowClass = isMobile ? style.upArrow : style.leftArrow;
     const {
@@ -97,8 +99,8 @@ export class Popover extends React.Component<Props> {
       arrowTop,
       arrowLeft,
     } = this.calculatePopOverPosition(
-      this.props.triggerLeft,
       this.props.triggerTop,
+      this.props.triggerLeft,
       this.props.triggerWidth,
       this.props.triggerHeight,
       this.props.isMobile
@@ -116,22 +118,17 @@ export class Popover extends React.Component<Props> {
       left: arrowLeft + 'px',
     };
 
-    const { show } = this.props;
-    if (show) {
-      return (
-        <div className={style.popOver} style={popOverStyle}>
-          <div className={arrowClass} style={arrowStyles} />
-          <div
-            className={style.closeButton}
-            onClick={this.closePopover}
-            id="popoverCloseButton"
-          />
-          {this.props.children}
-        </div>
-      );
-    } else {
-      return null;
-    }
+    return (
+      <div className={style.popOver} style={popOverStyle}>
+        <div className={arrowClass} style={arrowStyles} />
+        <div
+          className={style.closeButton}
+          onClick={this.closePopover}
+          id="popoverCloseButton"
+        />
+        {this.props.children}
+      </div>
+    );
   }
 }
 
