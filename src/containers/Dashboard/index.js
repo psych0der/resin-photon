@@ -2,16 +2,14 @@
 import React from 'react';
 import { Container, Row, Col } from 'react-grid-system';
 import {
-  IosSwitch,
   Popover,
   RadialSlider,
   TableWrapper,
+  Retry,
+  BrightnessSwatch,
 } from '../../components';
 import styles from './index.css';
-import { Button, Input } from 'rendition';
 import { ClipLoader } from 'react-spinners';
-import FaRefresh from 'react-icons/lib/fa/refresh';
-import FaSunO from 'react-icons/lib/fa/sun-o';
 
 import * as Constants from '../../commons/constants';
 
@@ -133,6 +131,7 @@ export class Dashboard extends React.Component<Props, State> {
       triggerWidth,
     } = this.state;
 
+    // create slider element if possible
     let slider = null;
     if (showPopover) {
       slider = (
@@ -142,19 +141,7 @@ export class Dashboard extends React.Component<Props, State> {
             this.brightnessChange(targetDeviceData.id, newValue);
           }}
         >
-          <div style={{ color: '#FFF', textAlign: 'center' }}>
-            <div style={{ marginBottom: '5px' }}>
-              <span style={{ color: '#DEB440' }}>
-                <FaSunO />
-              </span>
-            </div>
-            <div style={{ marginBottom: '5px' }}>
-              <span style={{ fontWeight: 700, fontSize: '20px' }}>{`${
-                targetDeviceData.brightness
-              }`}</span>%
-            </div>
-            <div style={{ fontSize: '14px' }}>Brightness</div>
-          </div>
+          <BrightnessSwatch brightness={targetDeviceData.brightness} />
         </RadialSlider>
       );
     }
@@ -168,14 +155,7 @@ export class Dashboard extends React.Component<Props, State> {
         </div>
       );
     } else if (fetchState === Constants.FAILED) {
-      dashboardContent = (
-        <div className={styles.retryContainer}>
-          <div className={styles.failedText}>Error: Unable to fetch data</div>
-          <Button m={2} emphasized tertiary onClick={this.requestBulbData}>
-            <span style={{ marginRight: '5px' }}>Retry</span> <FaRefresh />
-          </Button>
-        </div>
-      );
+      dashboardContent = <Retry handleRetry={this.requestBulbData} />;
     } else if (fetchState == Constants.SUCCESS) {
       dashboardContent = (
         <div className={styles.dataContainer}>
@@ -216,6 +196,7 @@ export class Dashboard extends React.Component<Props, State> {
 
 const mapStateToProps = ({ devices }) => ({ devices });
 
+// connect redux to the container
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
