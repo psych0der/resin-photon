@@ -7,13 +7,16 @@ export const FETCH_COMPLETE_DATA_SUCCESS =
   'BULBDATA/FETCH_COMPLETE_DATA_SUCCESS';
 export const FETCH_COMPLETE_DATA_FAILED = 'BULBDATA/FETCH_COMPLETE_DATA_FAILED';
 
+export const MODIFY_BULB_DATA = 'BULBDATA/MODIFY_BULB_DATA';
+
 type State = {
-  +completeData: null | Array<{
+  +dataHash: null | {
     +id: string,
     +name: string,
     +activity: boolean,
     +brightness: number,
-  }>,
+  },
+  +dataOrder: null | Array,
   +fetchCompleteDataState: string,
   +fetchCompleteDataError: any,
 };
@@ -34,7 +37,8 @@ export default (state: State = initialState, action: Action) => {
 
     case FETCH_COMPLETE_DATA_SUCCESS:
       return Object.assign({}, state, {
-        completeData: action.result,
+        dataHash: action.result,
+        dataOrder: Object.keys(action.result),
         fetchCompleteDataState: Constants.SUCCESS,
       });
 
@@ -45,6 +49,24 @@ export default (state: State = initialState, action: Action) => {
         completeData: null,
         fetchCompleteDataError: action.error.toString(),
       };
+
+    case MODIFY_BULB_DATA:
+      // Modify bulb brightness
+      // Turn off the bulb if brightness is 0
+      let active = true;
+      if (action.brightness === 0) {
+        active = false;
+      }
+      return Object.assign({}, state, {
+        dataHash: {
+          ...state.dataHash,
+          [action.id]: {
+            ...state.dataHash[action.id],
+            active,
+            brightness: action.brightness,
+          },
+        },
+      });
 
     default:
       return state;
@@ -74,8 +96,33 @@ export const fetchCompleteData = () => (dispatch: Dispatch) => {
           );
         })
         .then(function(jsonResult) {
-          return jsonResult.data;
+          // process data
+          // set brightness to 0 of turned off devices
+          let data = jsonResult.data;
+          let dataHash = {};
+          data.forEach(bulb => {
+            if (!bulb.active) {
+              bulb.brightness = 0;
+            }
+            dataHash[bulb.id] = bulb;
+          });
+          return dataHash;
         });
     },
+  });
+};
+
+/**
+ * Set bulb brightness value of particular bulb
+ * @param {number} id
+ * @param {number} brightness
+ */
+export const setBrightness = (id: number, brightness: number) => (
+  dispatch: Dispatch
+) => {
+  dispatch({
+    type: MODIFY_BULB_DATA,
+    id,
+    brightness,
   });
 };
