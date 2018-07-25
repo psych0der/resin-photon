@@ -136,7 +136,6 @@ export const fetchCompleteData = () => (dispatch: Dispatch) => {
  * @param {Object} data
  */
 const pushBulbDataChange = (bulbId: number, data: Object) => {
-  console.log(data);
   return fetch(
     `http://${process.env.REACT_APP_API_HOST}:${
       process.env.REACT_APP_API_PORT
