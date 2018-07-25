@@ -1,9 +1,14 @@
 // @flow
 import React from 'react';
 import { Container, Row, Col } from 'react-grid-system';
-import { IosSwitch, Popover, RadialSlider } from '../../components';
+import {
+  IosSwitch,
+  Popover,
+  RadialSlider,
+  TableWrapper,
+} from '../../components';
 import styles from './index.css';
-import { Button, Table, Input } from 'rendition';
+import { Button, Input } from 'rendition';
 import { ClipLoader } from 'react-spinners';
 import FaRefresh from 'react-icons/lib/fa/refresh';
 import FaSunO from 'react-icons/lib/fa/sun-o';
@@ -103,70 +108,11 @@ export class Dashboard extends React.Component<Props, State> {
     });
   };
 
-  TableColumns = [
-    {
-      field: 'name',
-      label: 'Room',
-      sortable: true,
-      render: (value: string, all: Object) => (
-        <span style={{ fontWeight: 700 }}>
-          {' '}
-          <Input
-            m={2}
-            onBlur={(e: Event) => {
-              this.handleBulbNameChange(all.id, e.target.value, false);
-            }}
-            onChange={(e: Event) => {
-              this.handleBulbNameChange(all.id, e.target.value, false);
-            }}
-            placeholder="Placeholder Text"
-            value={value}
-          />
-        </span>
-      ),
-    },
-    {
-      field: 'active',
-      label: 'State',
-      sortable: false,
-      render: (value: boolean, all: Object) => {
-        let switchState = value;
-        if (all.brightness === 0) {
-          switchState = false;
-        }
-        return (
-          <IosSwitch
-            handleChange={(state: boolean) => {
-              this.handleBulbSwitchToggle(all.id, state);
-            }}
-            sequence={all.id}
-            checked={switchState}
-            small={true}
-          />
-        );
-      },
-    },
-    {
-      field: 'brightness',
-      label: 'Brightness',
-      sortable: false,
-      render: (value: number, all: Object) => {
-        // Make brightness 0 if bulb is switched off
-        let brightness = value;
-        if (!all.active) {
-          brightness = 0;
-        }
-        return <span>{`${brightness}%`}</span>;
-      },
-    },
-  ];
-
   componentDidMount() {
     // fetch bulb data as component is mounted
     this.props.fetchCompleteData();
   }
   requestBulbData = () => {
-    console.log('fetching ....');
     this.props.fetchCompleteData();
   };
 
@@ -233,10 +179,12 @@ export class Dashboard extends React.Component<Props, State> {
     } else if (fetchState == Constants.SUCCESS) {
       dashboardContent = (
         <div className={styles.dataContainer}>
-          <Table
-            columns={this.TableColumns}
+          <TableWrapper
             data={dataOrder.map((id, index) => dataHash[id])}
-            onRowClick={this.handleRowClick}
+            handleRowClick={this.handleRowClick}
+            handleBulbNameChange={this.handleBulbNameChange}
+            handleBulbSwitchToggle={this.handleBulbSwitchToggle}
+            handleRowClick={this.handleRowClick}
           />
         </div>
       );
