@@ -151,8 +151,11 @@ export class RadialSlider extends React.Component<Props, State> {
       value = newAngle - this.props.arcEndAngle;
     }
     /* pass % change in change function */
-    this.props.handleChange(Math.round((value / total) * 100));
-    this.setState({ handleAngle: newAngle });
+    // only trigger changes when there is an actual change
+    if (newAngle != this.state.handleAngle) {
+      this.props.handleChange(Math.round((value / total) * 100));
+      this.setState({ handleAngle: newAngle });
+    }
   };
 
   render() {
