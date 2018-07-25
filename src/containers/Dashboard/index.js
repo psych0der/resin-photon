@@ -95,7 +95,17 @@ export class Dashboard extends React.Component<Props, State> {
     });
   };
   handleRowClick = (data: Object, e: Event) => {
-    let containerDimensions = e.currentTarget.getBoundingClientRect();
+    /**
+     * We want to capture dimensions of table row and not of anchor tag
+     * Table element of rendition library attaches event on anchor tags and not
+     * on whole row
+     */
+    let targetNode = e.currentTarget;
+    let targetNodeType = e.currentTarget.tagName;
+    if (targetNodeType === 'A') {
+      targetNode = e.currentTarget.parentNode;
+    }
+    let containerDimensions = targetNode.getBoundingClientRect();
     this.setState({
       showPopover: true,
       triggerTop: containerDimensions.top,
