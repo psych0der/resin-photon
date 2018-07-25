@@ -3,7 +3,7 @@ import React from 'react';
 import { Container, Row, Col } from 'react-grid-system';
 import { IosSwitch, Popover, RadialSlider } from '../../components';
 import styles from './index.css';
-import { Button, Table } from 'rendition';
+import { Button, Table, Input } from 'rendition';
 import { ClipLoader } from 'react-spinners';
 import FaRefresh from 'react-icons/lib/fa/refresh';
 import FaSunO from 'react-icons/lib/fa/sun-o';
@@ -12,12 +12,17 @@ import * as Constants from '../../commons/constants';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { fetchCompleteData, setBrightness } from '../../redux/reducers/devices';
+import {
+  fetchCompleteData,
+  setBrightness,
+  setBulbName,
+} from '../../redux/reducers/devices';
 
 type Props = {
   devices: Object,
   fetchCompleteData: () => *,
   setBrightness: () => *,
+  setBulbName: () => *,
 };
 type State = {
   showPopover: boolean,
@@ -38,9 +43,13 @@ export class Dashboard extends React.Component<Props, State> {
     targetDeviceData: null,
   };
 
-  handleBulbSwitchToggle = (data: Object) => {
-    // e.stopPropagation();
-    console.log(data);
+  /**
+   * Handles toggling of switch buttons
+   * Assumption: If the bulb is being turned on,
+   * its brightness is set to 50%
+   */
+  handleBulbSwitchToggle = (id: number, state: boolean) => {
+    this.props.setBrightness(id, state ? 50 : 0);
   };
   brightnessChange = (id: number, newValue: number) => {
     this.setState({
@@ -50,6 +59,26 @@ export class Dashboard extends React.Component<Props, State> {
       },
     });
     this.props.setBrightness(id, newValue);
+  };
+
+  /**
+   * isIterim means that event fired on value change. We want
+   * to update changes to redux only when input field is blurred
+   * and not on every character change
+   * @memberof Dashboard
+   */
+  handleBulbNameChange = (
+    id: number,
+    name: string,
+    isInterim: boolean = true
+  ) => {
+    this.setState({
+      targetDeviceData: {
+        ...this.state.targetDeviceData,
+        name,
+      },
+    });
+    if (!isInterim) this.props.setBulbName(id, name);
   };
 
   /* Close Popover */
@@ -79,8 +108,21 @@ export class Dashboard extends React.Component<Props, State> {
       field: 'name',
       label: 'Room',
       sortable: true,
-      render: (value: string) => (
-        <span style={{ fontWeight: 700 }}>{value}</span>
+      render: (value: string, all: Object) => (
+        <span style={{ fontWeight: 700 }}>
+          {' '}
+          <Input
+            m={2}
+            onBlur={(e: Event) => {
+              this.handleBulbNameChange(all.id, e.target.value, false);
+            }}
+            onChange={(e: Event) => {
+              this.handleBulbNameChange(all.id, e.target.value, false);
+            }}
+            placeholder="Placeholder Text"
+            value={value}
+          />
+        </span>
       ),
     },
     {
@@ -94,8 +136,8 @@ export class Dashboard extends React.Component<Props, State> {
         }
         return (
           <IosSwitch
-            handleChange={() => {
-              this.handleBulbSwitchToggle(all.id);
+            handleChange={(state: boolean) => {
+              this.handleBulbSwitchToggle(all.id, state);
             }}
             sequence={all.id}
             checked={switchState}
@@ -231,6 +273,7 @@ const mapDispatchToProps = dispatch =>
     {
       fetchCompleteData,
       setBrightness,
+      setBulbName,
     },
     dispatch
   );
