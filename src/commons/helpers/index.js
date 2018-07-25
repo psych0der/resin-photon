@@ -85,3 +85,60 @@ export const createCircularArc = (
     start.y
   } A ${radius} ${radius} 0 ${useLargerArc} ${arcSweep} ${end.x} ${end.y}`;
 };
+
+/**
+ * Formats date into a specific text:
+ * For eg: Monday 18 June, 2018
+ * @param {Date} date
+ */
+export const getFormatedDate = (date: Date): string => {
+  const days = [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+  ];
+
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+
+  const getMonthName = (date: Date): string => {
+    return months[date.getMonth()];
+  };
+  const getDayName = (date: Date): string => {
+    return days[date.getDay()];
+  };
+
+  return `${getDayName(date)} ${date.getDate()} ${getMonthName(
+    date
+  )}, ${date.getFullYear()}`;
+};
+
+/**
+ * Formats current date into 12 hours format time
+ * @param {Date} date
+ */
+export const formatAMPM = (date: Date): string => {
+  let hours = date.getHours();
+  let minutes = date.getMinutes();
+  let ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+  minutes = minutes < 10 ? '0' + minutes : minutes;
+  return `${hours}:${minutes} ${ampm}`;
+};
