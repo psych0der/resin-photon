@@ -24,6 +24,30 @@ type Props = {
   children?: React.ChildrenArray<React.node>,
 };
 
+/**
+ * Converts initial value to angle.
+ * This is used to set initial position of the handle
+ * @param {Number} value value to be converted to angle
+ * @param {Number} arcEndAngle Ending angle of arc
+ * @param {Number} arcStartAngle Starting angle of arc
+ */
+const convertValueToAngle = (
+  value: number,
+  arcEndAngle: number,
+  arcStartAngle: number
+) => {
+  // clip percentage
+  if (value > 100) {
+    value = 100;
+  } else if (value < 0) {
+    value = 0;
+  }
+
+  let total = 360 - arcEndAngle + arcStartAngle;
+  let angle = normalizeAngle(arcEndAngle + total * value * 0.01);
+  return angle;
+};
+
 type State = {
   handleAngle: number,
 };
@@ -39,7 +63,7 @@ export class RadialSlider extends React.Component<Props, State> {
     baseStrokeColor: '#727377',
     dimmestColor: '#82671F',
     brightestColor: '#F7C544',
-    strokeWidth: 20.4,
+    strokeWidth: 15.4,
     handleChange: () => {},
     value: 0,
   };
@@ -50,28 +74,26 @@ export class RadialSlider extends React.Component<Props, State> {
     sliderCenterY: this.props.radius + 20,
   };
 
-  /**
-   * Converts initial value to angle.
-   * This is used to set initial position of the handle
-   */
-  convertValueToAngle = (value: number) => {
-    // clip percentage
-    if (value > 100) {
-      value = 100;
-    } else if (value < 0) {
-      value = 0;
-    }
-
-    let total = 360 - this.props.arcEndAngle + this.props.arcStartAngle;
-    let angle = normalizeAngle(this.props.arcEndAngle + total * value * 0.01);
-    this.props.handleChange(value);
-    return angle;
-  };
   state = {
-    handleAngle: this.convertValueToAngle(this.props.value),
+    handleAngle: convertValueToAngle(
+      this.props.value,
+      this.props.arcEndAngle,
+      this.props.arcStartAngle
+    ),
   };
 
   containerNode = React.createRef();
+
+  // This is to update initial handle in case of propChange
+  static getDerivedStateFromProps(nextProps: Props, prevState: State) {
+    return {
+      handleAngle: convertValueToAngle(
+        nextProps.value,
+        nextProps.arcEndAngle,
+        nextProps.arcStartAngle
+      ),
+    };
+  }
 
   /**
    * Returns coordinates for container svg element
@@ -176,15 +198,20 @@ export class RadialSlider extends React.Component<Props, State> {
     } else {
       childContainerStyle = {
         position: 'absolute',
-        left: containerPosition.x + this.Geometry.sliderCenterX,
-        top: containerPosition.y + this.Geometry.sliderCenterY,
+        left: '50%',
+        top: '50%',
         transform: 'translate(-50%, -50%)',
       };
     }
 
     return (
-      <div>
-        <div>radial slider</div>
+      <div
+        style={{
+          position: 'relative',
+          width: `${this.Geometry.svgWidth}px`,
+          margin: '0 auto',
+        }}
+      >
         <svg
           style={{
             width: this.Geometry.svgWidth + 'px',
