@@ -8,7 +8,9 @@ export const FETCH_COMPLETE_DATA_SUCCESS =
 export const FETCH_COMPLETE_DATA_FAILED = 'BULBDATA/FETCH_COMPLETE_DATA_FAILED';
 
 export const MODIFY_BULB_DATA = 'BULBDATA/MODIFY_BULB_DATA';
-
+/* Buld data is broken down into data hash and data order to speedup data edits.
+  Radial slider invokes lot of changes, so edits needs to be performant
+ */
 type State = {
   +dataHash: null | {
     +id: string,
