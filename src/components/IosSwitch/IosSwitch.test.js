@@ -10,9 +10,9 @@ it('renders without crashing', () => {
 });
 
 it('initializes correctly with the default state passed ', () => {
-  const wrapper = mount(<IosSwitch defaultChecked={true} />);
+  const wrapper = mount(<IosSwitch checked={true} />);
   let checkbox = wrapper.find({ type: 'checkbox' });
-  expect(checkbox.prop('defaultChecked')).toBe(true);
+  expect(checkbox.prop('checked')).toBe(true);
 });
 
 it('Calls handleChange function on toggling the checkbox', () => {
