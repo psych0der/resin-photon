@@ -24,7 +24,8 @@ class IosSwitch extends React.Component<Props, State> {
 
   state = { checked: this.props.defaultChecked };
 
-  onChange = () => {
+  onChange = (e: Event) => {
+    e.stopPropagation();
     const newValue = !this.state.checked;
     // setState is not synchronous. So we need to preserve the value
     this.setState({ checked: newValue });
@@ -42,7 +43,12 @@ class IosSwitch extends React.Component<Props, State> {
     }
 
     return (
-      <div className="iosSwitch">
+      <div
+        className="iosSwitch"
+        onClick={e => {
+          e.stopPropagation();
+        }}
+      >
         <input
           className={style.iosSwitch}
           type="checkbox"
