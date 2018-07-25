@@ -3,13 +3,49 @@
 Sample home automation light controlling system using Resin mock API
 
 > This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app)
-> since it provides simple and battle tested boilerplate with many goodies built in. However this is an ejected version
+> since it provides simple and battle-tested boilerplate with many goodies built in. However, this is an ejected version
 > as I wanted some features not available by default
 
-#### Modifications done on create-react-app boilerplate
-* Added support for css-modules. This avoids major headache of maintaining distinct class names across all the components
-* Used Scss instead of css, as I feel using a superset of css will increase my developer productivity. All the SCSS files are compiled to css files only. So in the source code, only css files are imported.
-  * This decision allows other developers to switch to css if they like and code will look same
+Table of contents
+=================
+
+
+   * [Usage](#usage)
+   * [Modification done](#modifications)
+   * [Environment variables](#environment-variables)
+   * [Redux](#redux)
+   * [Using Redux DevTools](#using-dev-tools)
+   * [Fetch](#fetch)
+   * [Storybook](#storybook)
+   * [Project structure](#project-structure)
+   * [Application source code](#aps)
+   * [Configs](#configs)
+   * [Assumptions](#assumptions)
+   * [What I couldn't do well](#What-I-couldnt-do-well)
+   * [What I loved most](#What-I-loved-most)
+   * [Approach](#approach)
+
+---
+
+#### [Usage](#usage)
+**This project uses node version 8. It is advisable to use [nvm](https://github.com/creationix/nvm). Project root contains `.nvmrc` file.**
+> This project consumes
+
+
+- Install dependencies: `yarn install`
+- Start development server: `yarn run start`
+- Create a production build: `yarn run build`
+- Run Test cases: `yarn run test`
+- Start Storybook development server: `yarn run start-storybook`
+- Build Storybook: `yarn run build-storybook`
+
+
+---
+
+#### [Modifications done on create-react-app boilerplate](#modifications)
+* Added support for CSS-modules. This avoids the major headache of maintaining distinct class names across all the components
+* Used Scss instead of CSS, as I feel using a superset of CSS will increase my developer productivity. All the SCSS files are compiled to CSS files only. So in the source code, only CSS files are imported.
+  * This decision allows other developers to switch to CSS if they like and the code will look same
 
 * Add [Flow](https://flow.org/) type checking. This allows writing code more confidently.
 * Add [Prettier](https://github.com/prettier/prettier) code formatting. I am using VSCode and there's an excellent plugin for prettier that formats code on save
@@ -19,22 +55,22 @@ Sample home automation light controlling system using Resin mock API
 
 ---
 
-#### Environment variables
+#### [Environment variables](#environment-variables)
 This project uses environment variables for configurations like HTTP endpoint of the light bulb API. This allows the code to be decoupled from the configuration and configurables to be frozen at build time.
-At the build time, this project looks for .env file in the project root directory. This setup was done by create-react-app automatically while setting up this project. [Look here](https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/template/README.md#adding-custom-environment-variables) for more info.
+At the build time, this project looks for the .env file in the project root directory. This setup was done by create-react-app automatically while setting up this project. [Look here](https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/template/README.md#adding-custom-environment-variables) for more info.
 This project contains *.env.sample* file to describe environment variables required by project. **Don't add any confidential values in this sample file. Original .env file is not checked in git for security reasons.**
 > Create a .env file by copying it from .env.sample before running this project  [`cp .env.sample .env`]
 
 ---
 
-#### Redux
-I have used REDUX for state management. This allows for a single source of truth about application state. As there is scope for functionality addition which will require state to be maintained at application level, this is good to have addition in this project.
+#### [Redux](#redux)
+I have used REDUX for state management. This allows for a single source of truth about application state. As there is scope for functionality addition which will require the state to be maintained at the application level, this is good to have added in this project.
 Specifically, I have added REDUX for having a central and out of the box support for error handling of network requests. As all network requests have 3 states, namely in-progress, success, and failed, having a REDUX middleware at the application level that will handle all network calls allows to write error handling logic only once and the listen for different states to update UI.
-Whenever a remote call is made, it has to be done through REDUX action creators, which will dispatch the relevant actions on state change of network call.
+Whenever a remote call is made, it has to be done through REDUX action creators, which will dispatch the relevant actions on a state change of network call.
 
-#### Using Redux DevTools
+#### [Using Redux DevTools](#using-dev-tools)
 
-[Redux Devtools](https://github.com/gaearon/redux-devtools) are enabled by default in development.
+[Redux Devtools](https://github.com/gaearon/redux-devtools) is enabled by default in development.
 
 - <kbd>CTRL</kbd>+<kbd>H</kbd> Toggle DevTools Dock
 - <kbd>CTRL</kbd>+<kbd>Q</kbd> Move DevTools Dock Position
@@ -45,23 +81,23 @@ If you have the
 
 DevTools are not enabled during production.
 
-#### Fetch
-I have used new [Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) API for network calls in this project instead of AJAX. Since Fetch is relatively newer API, it is not supported on older browsers.
+#### [Fetch](#fetch)
+I have used new [Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) API for network calls in this project instead of AJAX. Since Fetch is a relatively newer API, it is not supported on older browsers.
 To overcome this limitation a [polyfill](https://www.npmjs.com/package/whatwg-fetch) for Fetch has been used. This just wraps older XMLHttp method in Promise and exposes interface similar to native Fetch.
 Please note that this does not simplify or modify the interface that of native Fetch. It just adds support for older browsers.
 
 ---
 
-#### Storybook
+#### [Storybook](#storybook)
 [Storybook](https://github.com/storybooks/storybook) is a UI development and testing library. I have integrated storybook as this will provide required support
 for developing new UI components. To run storybook, type this command  -> `yarn run storybook`, and it will run a development server
-for storybook. For more options visit the link mentioned above.
+for the storybook. For more options visit the link mentioned above.
 
-The storybook configuration will load files with extension `.stories.js` inside src directory.
+The storybook configuration will load files with extension `.stories.js` inside the src directory.
 
 ---
 
-#### Project structure
+#### [Project structure](#project-structure)
 ```
 resin-photon
 ├── .storybook
@@ -113,25 +149,49 @@ resin-photon
 ├── package.json
 └── yarn.lock
 ```
-##### Application source code
+##### [Application source code](#aps)
 - All of the application source resides inside `src` directory.
 - All Redux related code is inside `src/redux`
   - Reducers should reside in `src/redux/reducers`
-- Containers/Statefull components should have a directory inside `src/containers`. Expose the default container using index.js file inside folder
+- Containers/Stateful components should have a directory inside `src/containers`. Expose the default container using index.js file inside the folder
 - Dumb/fully controlled components should have a directory inside `src/components/`
 - All the static assets used by components/containers should be contained inside their respective directories. This is done to isolate their assets and dependencies
 - Each component/container should contain their .story.js and .test.js files inside their directories
 
-##### Configs
+##### [Configs](#configs)
 ALl webpack related configs, and polyfills reside inside `config` directory
 
 ---
 
-#### Assumptions
-- I have assumed
+#### [Assumptions](#assumptions)
+- Tablets and Mobile phones are going to have similar design. This will allow me to use only 1 breakpoint in css.
+  Either it will be a mobile or desktop design.
+- Server side rendering is not required because as advanced techniques exist to overcome first paint. Moreover
+  server side rendering won't allow publishing with webapp to a CDN and make it completely serverless
+- Popover layout is going to cover 80% height in desktop view and 80% width in mobile view
+- Multi-touch is not supported. This allows me to attach global mousemove and touchmove event handlers on the document level,
+  as only single touch or mouse move can happen at any given moment
+- Server updates are optimistic. When a value(brightness, name) is changed, server updates are triggered but not tracked.
+  Handling server response on each change is a bigger problem and out of the scope for this assignment
+- If bulb is turned on after the off state, its brightness is set to 50. This is because when the bulb is turned off
+  , its previous brightness is not stored and straightforward brightness is set to 0
+---
 
+#### [What I couldn't do well](#What-I-couldnt-do-well)
+- I could not make the yellow gradient in radial slider perfectly. I think that requires tuning and is time consuming and
+  is not worth the time spending
+- I could not focus much on building a perfect navbar due to time shortage. This is partly because the implementation does not
+  allow setting a value in the middle of the navbar.
+- I couldn't make pixel to pixel copy of the screenshot given in the assignment
 
-#### Approach
+---
+
+#### [What I loved most](#What-I-loved-most)
+- I loved building Radial slider, as I got to brushen up my geometry and SVG skills. I spent considerable time on that part
+  but it was worth it
+- I loved building redux integration and data shape. It is optimized for frequent data edits.
+
+#### [Approach](#approach)
 I have started building this project by setting a sane development environment that will allow faster iterations, easy updates and better maintainability.
 - Eslint is configured to inherit default practices from react-app
 - Flow is configured to allow for type checking inside JS code
