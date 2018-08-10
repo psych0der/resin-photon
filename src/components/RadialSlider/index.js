@@ -83,16 +83,6 @@ export class RadialSlider extends React.Component<Props, State> {
 
   containerNode = React.createRef();
 
-  // This is to update initial handle in case of propChange
-  static getDerivedStateFromProps(nextProps: Props, prevState: State) {
-    return {
-      handleAngle: convertValueToAngle(
-        nextProps.value,
-        nextProps.arcEndAngle,
-        nextProps.arcStartAngle
-      ),
-    };
-  }
 
   /**
    * Returns coordinates for container svg element
@@ -129,7 +119,6 @@ export class RadialSlider extends React.Component<Props, State> {
     // get new angle by adding delta
     const deltaTheta = calcAngleDiff(x, y, initialX, -initialY);
     let newAngle = normalizeAngle(this.state.handleAngle + deltaTheta);
-
     // clip off new angle within the bounds of start and end angle
     if (
       newAngle > this.props.arcStartAngle &&
@@ -149,11 +138,12 @@ export class RadialSlider extends React.Component<Props, State> {
     } else {
       value = newAngle - this.props.arcEndAngle;
     }
+
     /* pass % change in change function */
     // only trigger changes when there is an actual change
     if (newAngle !== this.state.handleAngle) {
       this.props.handleChange(Math.round((value / total) * 100));
-      this.setState({ handleAngle: newAngle });
+      this.setState({ handleAngle: newAngle }, () => {});
     }
   };
 
@@ -184,7 +174,6 @@ export class RadialSlider extends React.Component<Props, State> {
       this.state.handleAngle,
       arcEndAngle
     );
-
     const handlerStartPosition = polarToCartesian(
       0,
       0,
