@@ -52,6 +52,13 @@ export class Dashboard extends React.Component<Props, State> {
    * its brightness is set to 50%
    */
   handleBulbSwitchToggle = (id: number, state: boolean) => {
+    this.setState({
+      targetDeviceData: {
+        ...this.state.targetDeviceData,
+        active: state,
+        brightness: state ? 50 : 0,
+      },
+    });
     this.props.setBrightness(id, state ? 50 : 0);
   };
   brightnessChange = (id: number, newValue: number) => {
@@ -59,6 +66,7 @@ export class Dashboard extends React.Component<Props, State> {
       targetDeviceData: {
         ...this.state.targetDeviceData,
         brightness: newValue,
+        active: newValue > 0,
       },
     });
     this.props.setBrightness(id, newValue);
