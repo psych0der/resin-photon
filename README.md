@@ -9,22 +9,22 @@ Sample home automation light controlling system using Resin mock API
 # Table of contents
 
 - [Table of contents](#table-of-contents)
-      - [Usage](#usage)
-      - [Modifications done on create-react-app boilerplate](#modifications-done-on-create-react-app-boilerplate)
-      - [Environment variables](#environment-variables)
-      - [Redux](#redux)
-      - [Using Redux DevTools](#using-redux-devtools)
-      - [Fetch](#fetch)
-      - [Storybook](#storybook)
-      - [Project structure](#project-structure)
-        - [Application source code](#application-source-code)
-        - [Configs](#configs)
-      - [What I loved most](#what-i-loved-most)
-      - [Approach](#approach)
+    - [Usage](#usage)
+    - [Modifications done on create-react-app boilerplate](#modifications-done-on-create-react-app-boilerplate)
+    - [Environment variables](#environment-variables)
+    - [Redux](#redux)
+    - [Using Redux DevTools](#using-redux-devtools)
+    - [Fetch](#fetch)
+    - [Storybook](#storybook)
+    - [Project structure](#project-structure)
+    - [Application source code](#application-source-code)
+    - [Configs](#configs)
+    - [What I loved most](#what-i-loved-most)
+    - [Approach](#approach)
 
 ---
 
-#### [Usage](#usage)
+### [Usage](#usage)
 
 **This project uses node version 8. It is advisable to use [nvm](https://github.com/creationix/nvm). Project root contains `.nvmrc` file.**
 
@@ -41,7 +41,7 @@ Sample home automation light controlling system using Resin mock API
 
 ---
 
-#### [Modifications done on create-react-app boilerplate](#modifications)
+### [Modifications done on create-react-app boilerplate](#modifications)
 
 - Added support for CSS-modules. This avoids the major headache of maintaining distinct class names across all the components
 - Used Scss instead of CSS, as I feel using a superset of CSS will increase my developer productivity. All the SCSS files are compiled to CSS files only. So in the source code, only CSS files are imported.
@@ -56,7 +56,7 @@ Sample home automation light controlling system using Resin mock API
 
 ---
 
-#### [Environment variables](#environment-variables)
+### [Environment variables](#environment-variables)
 
 This project uses environment variables for configurations like HTTP endpoint of the light bulb API. This allows the code to be decoupled from the configuration and configurables to be frozen at build time.
 At the build time, this project looks for the .env file in the project root directory. This setup was done by create-react-app automatically while setting up this project. [Look here](https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/template/README.md#adding-custom-environment-variables) for more info.
@@ -66,13 +66,13 @@ This project contains _.env.sample_ file to describe environment variables requi
 
 ---
 
-#### [Redux](#redux)
+### [Redux](#redux)
 
 I have used REDUX for state management. This allows for a single source of truth about application state. As there is scope for functionality addition which will require the state to be maintained at the application level, this is good to have added in this project.
 Specifically, I have added REDUX for having a central and out of the box support for error handling of network requests. As all network requests have 3 states, namely in-progress, success, and failed, having a REDUX middleware at the application level that will handle all network calls allows to write error handling logic only once and the listen for different states to update UI.
 Whenever a remote call is made, it has to be done through REDUX action creators, which will dispatch the relevant actions on a state change of network call.
 
-#### [Using Redux DevTools](#using-dev-tools)
+### [Using Redux DevTools](#using-dev-tools)
 
 [Redux Devtools](https://github.com/gaearon/redux-devtools) is enabled by default in development.
 
@@ -85,7 +85,7 @@ If you have the
 
 DevTools are not enabled during production.
 
-#### [Fetch](#fetch)
+### [Fetch](#fetch)
 
 I have used new [Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) API for network calls in this project instead of AJAX. Since Fetch is a relatively newer API, it is not supported on older browsers.
 To overcome this limitation a [polyfill](https://www.npmjs.com/package/whatwg-fetch) for Fetch has been used. This just wraps older XMLHttp method in Promise and exposes interface similar to native Fetch.
@@ -93,7 +93,7 @@ Please note that this does not simplify or modify the interface that of native F
 
 ---
 
-#### [Storybook](#storybook)
+### [Storybook](#storybook)
 
 [Storybook](https://github.com/storybooks/storybook) is a UI development and testing library. I have integrated storybook as this will provide required support
 for developing new UI components. To run storybook, type this command -> `yarn run storybook`, and it will run a development server
@@ -103,7 +103,7 @@ The storybook configuration will load files with extension `.stories.js` inside 
 
 ---
 
-#### [Project structure](#project-structure)
+### [Project structure](#project-structure)
 
 ```
 resin-photon
@@ -157,7 +157,7 @@ resin-photon
 └── yarn.lock
 ```
 
-##### [Application source code](#aps)
+### [Application source code](#aps)
 
 - All of the application source resides inside `src` directory.
 - All Redux related code is inside `src/redux`
@@ -167,19 +167,19 @@ resin-photon
 - All the static assets used by components/containers should be contained inside their respective directories. This is done to isolate their assets and dependencies
 - Each component/container should contain their .story.js and .test.js files inside their directories
 
-##### [Configs](#configs)
+### [Configs](#configs)
 
 ALl webpack related configs, and polyfills reside inside `config` directory
 
 ---
 
-#### [What I loved most](#What-I-loved-most)
+### [What I loved most](#What-I-loved-most)
 
 - I loved building Radial slider, as I got to brushen up my geometry and SVG skills. I spent considerable time on that part
   but it was worth it
 - I loved building redux integration and data shape. It is optimized for frequent data edits.
 
-#### [Approach](#approach)
+### [Approach](#approach)
 
 I have started building this project by setting a sane development environment that will allow faster iterations, easy updates and better maintainability.
 
