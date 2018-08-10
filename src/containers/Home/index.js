@@ -3,7 +3,6 @@ import React from 'react';
 
 import { Dashboard } from '../../containers';
 import { getFormatedDate, formatAMPM } from '../../commons/helpers';
-import { Navbar, Link } from 'rendition';
 import styles from './index.css';
 type Props = {};
 type State = {
@@ -12,7 +11,7 @@ type State = {
 
 export class Home extends React.Component<Props, State> {
   state = { changeValue: 0 };
-  handleChange = changeValue => {
+  handleChange = (changeValue: number) => {
     this.setState({ changeValue });
   };
   render() {
@@ -34,17 +33,9 @@ export class Home extends React.Component<Props, State> {
     );
     return (
       <div className={styles.someClass}>
-        <Navbar
-          brand={currentDate}
-          bg={navBackgrounColor}
-          p="17px"
-          style={{ height: '50px' }}
-          fontSize="12px"
-          color={navBarTextColor}
-        >
-          {currentTime}
-          <Link />
-        </Navbar>
+        <header className={styles.pageHeader}>
+          <center>Home bulb automation</center>
+        </header>
         <Dashboard />
       </div>
     );
