@@ -158,7 +158,7 @@ export const setBrightness = (id: number, brightness: number) => (
   dispatch: Dispatch
 ) => {
   // update changes on server
-  pushBulbDataChange(id, { brightness, active: true ? brightness > 0 : false });
+  pushBulbDataChange(id, { brightness, active: brightness > 0 ? true : false });
   dispatch({
     type: MODIFY_BULB_BRIGHTNESS,
     id,
