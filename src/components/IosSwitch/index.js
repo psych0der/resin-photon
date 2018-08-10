@@ -24,16 +24,7 @@ class IosSwitch extends React.Component<Props, State> {
 
   state = { checked: this.props.checked };
 
-  // This is to update defaultChecked value in case of prop changes
-  // static getDerivedStateFromProps(nextProps: Props, prevState: State) {
-  //   console.log(nextProps.defaultChecked);
-  //   return {
-  //     checked: nextProps.defaultChecked,
-  //   };
-  // }
-
   onChange = (e: Event) => {
-    e.stopPropagation();
     const newValue = !this.state.checked;
     // setState is not synchronous. So we need to preserve the value
     this.setState({ checked: newValue });
