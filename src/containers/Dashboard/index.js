@@ -147,6 +147,7 @@ export class Dashboard extends React.Component<Props, State> {
       slider = (
         <RadialSlider
           value={targetDeviceData.brightness}
+          key={this.state.targetDeviceData.id}
           handleChange={newValue => {
             this.brightnessChange(targetDeviceData.id, newValue);
           }}
