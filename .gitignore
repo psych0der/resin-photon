@@ -25,3 +25,4 @@ yarn-error.log*
 
 # ignore .env file
 .env
+README-orig.md
