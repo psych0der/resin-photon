@@ -16,7 +16,7 @@ type Props = {
 export class Popover extends React.Component<Props> {
   static defaultProps = {
     show: true,
-    triggerTop: 40,
+    triggerTop: 70,
     triggerLeft: 150,
     triggerWidth: 400,
     triggerHeight: 60,
