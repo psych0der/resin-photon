@@ -107,39 +107,39 @@ The storybook configuration will load files with extension `.stories.js` inside 
 
 ```
 resin-photon
-├── .storybook
+├──.storybook
 │   ├── config.js
 │   └── webpack.config.js
-├── config
+├──config
 │   ├── env.js
 │   ├── paths.js
 │   ├── polyfills.js
 │   ├── webpack.config.dev.js
 │   ├── webpack.config.prod.js
 │   └── webpackDevServer.config.js
-├── public
+├── public
 │   ├── favicon.ico
 │   ├── index.html
 │   └── manifest.json
-├── scripts
+├── scripts
 │   ├── build.js
 │   ├── start.js
 │   └── test.js
-├── src
-│   ├── components
-│   ├── containers
-│   │   ├── App
+├── src
+│   ├── components
+│   ├── containers
+│   │   ├── App
 │   │   │   ├── App.test.js
 │   │   │   └── index.js
-│   │   ├── Home
+│   │   ├── Home
 │   │   │   ├── index.css
 │   │   │   ├── index.js
 │   │   │   └── index.scss
 │   │   └── index.js
-│   ├── redux
-│   │   ├── middlewares
+│   ├── redux
+│   │   ├── middlewares
 │   │   │   └── augmentorMiddleware.js
-│   │   ├── reducers
+│   │   ├── reducers
 │   │   │   ├── index.js
 │   │   │   └── sample.js
 │   │   └── store.js
