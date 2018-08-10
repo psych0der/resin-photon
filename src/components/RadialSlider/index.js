@@ -83,6 +83,17 @@ export class RadialSlider extends React.Component<Props, State> {
 
   containerNode = React.createRef();
 
+  componentDidUpdate(prevProps: Props) {
+    if (this.props.value !== prevProps.value) {
+      this.setState({
+        handleAngle: convertValueToAngle(
+          this.props.value,
+          this.props.arcEndAngle,
+          this.props.arcStartAngle
+        ),
+      });
+    }
+  }
 
   /**
    * Returns coordinates for container svg element
